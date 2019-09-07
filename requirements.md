@@ -65,3 +65,6 @@
 - Email address field.
 - Password field.
 - Message to contact administration via email if member cannot log-in.
+
+
+(?) indicates a low-priority feature that may be added in later.
