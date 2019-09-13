@@ -39,6 +39,9 @@
 - TODO
 
 # Project Page
+- Project lead (and link to their profile page).
+- Team members (and their profile links).
+- Link to project on GitHub.
 - TODO
 
 # Member List
