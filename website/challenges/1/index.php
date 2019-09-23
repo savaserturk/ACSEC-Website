@@ -1,3 +1,14 @@
+<?php
+require 'database.php';
+
+if (isset($_POST['submit'])) {
+  $db = Database::getConnection();
+
+  $query = $db->prepare('INSERT INTO File(Code) VALUES (?)');
+  $query->execute([$_REQUEST['code']]);
+}
+?>
+
 <html>
   <head>
     <title>1 - Gates</title>
@@ -26,19 +37,25 @@
       <p>XOR: 0</p>
     </div>
     <?php
-      if (isset($_POST['submit'])) {
-        echo '<div class="content">';
-        echo '  <pre class="prettyprint linenums lang-java">' . $_REQUEST['code'] . '</pre>';
-        echo '</div>';
+      $db = Database::getConnection();
+
+      $query = $db->prepare('SELECT * FROM File');
+      $query->execute();
+
+      if ($query->rowCount() > 0) {
+        foreach ($query as $row) {
+          echo '<div class="content">';
+          echo '  <pre class="prettyprint linenums lang-java">' . $row['Code'] . '</pre>';
+          echo '</div>';
+        }
       }
-      else {
-          echo '<form action="' . $_SERVER['PHP_SELF'] . '" method="post">';
-          echo '  <div id="code-submission-panel">';
-          echo '    <textarea name="code" rows=4 cols=50 placeholder="Enter your solution here..."></textarea>';
-          echo '    <input type="submit" name="submit" value="Submit">';
-          echo '  </div>';
-          echo '</form>';
-      }
+
+      echo '<form action="' . $_SERVER['PHP_SELF'] . '" method="post">';
+      echo '  <div id="code-submission-panel">';
+      echo '    <textarea name="code" rows=4 cols=50 placeholder="Enter your solution here..."></textarea>';
+      echo '    <input type="submit" name="submit" value="Submit">';
+      echo '  </div>';
+      echo '</form>';
     ?>
   </body>
 </html>
