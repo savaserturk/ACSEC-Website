@@ -67,6 +67,8 @@
 # Log-in Page
 - Email address field.
 - Password field.
+- First name field.
+- Last name field.
 - Message to contact administration via email if member cannot log-in.
 
 
