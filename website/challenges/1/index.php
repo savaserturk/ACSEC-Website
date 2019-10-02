@@ -13,7 +13,9 @@ if (isset($_POST['submit'])) {
   <head>
     <title>1 - Gates</title>
     <link rel="stylesheet" type="text/css" href="../style.css">
-    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?skin=default"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <script src="submission_extender.js"></script>
   </head>
   <body>
     <h1>Challenge 1: Gates</h1>
@@ -52,7 +54,22 @@ if (isset($_POST['submit'])) {
 
       echo '<form action="' . $_SERVER['PHP_SELF'] . '" method="post">';
       echo '  <div id="code-submission-panel">';
-      echo '    <textarea name="code" rows=4 cols=50 placeholder="Enter your solution here..."></textarea>';
+      echo '    <select name="language">';
+      echo '      <option value="none">select language</option>';
+      echo '      <option value="java">java</option>';
+      echo '      <option value="c">c</option>';
+      echo '      <option value="csharp">c#</option>';
+      echo '      <option value="cpp">c++</option>';
+      echo '      <option value="python">python</option>';
+      echo '      <option value="python">javascript</option>';
+      echo '    </select>';
+      echo '    <div id="file-area">';
+      echo '      <div>';
+      echo '        <input type="text" name="filename1" placeholder="filename">';
+      echo '        <textarea name="code1" rows=4 cols=50 placeholder="Enter your solution here..."></textarea>';
+      echo '      </div>';
+      echo '    </div>';
+      echo '    <button id="add-another-file" type="button">Add another file</button>';
       echo '    <input type="submit" name="submit" value="Submit">';
       echo '  </div>';
       echo '</form>';
