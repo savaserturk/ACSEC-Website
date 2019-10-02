@@ -2,10 +2,52 @@
 require 'database.php';
 
 if (isset($_POST['submit'])) {
+  $fileCount = 0;
+  $fileFound = true;
+  while ($fileFound) {
+    if (isset($_POST['code' . ($fileCount + 1)])) {
+      $fileCount++;
+    }
+    else {
+      $fileFound = false;
+    }
+  }
+
+  // TEMP:
+  // This is a placeholder value, until the user accounts system is implemented.
+  $memberId = 0;
+
+  $challengeId = 1;
+  date_default_timezone_set('America/Toronto');
+  $timePosted = date("Y-m-d H:i:s");
+  $language = $_POST['language'];
+
   $db = Database::getConnection();
 
-  $query = $db->prepare('INSERT INTO File(Code) VALUES (?)');
-  $query->execute([$_REQUEST['code']]);
+  if ($language != 'none') {
+    $query = $db->prepare('INSERT INTO Submission(MemberId, ChallengeId, TimePosted, Language) VALUES (?, ?, ?, ?)');
+    $query->execute([$memberId, $challengeId, $timePosted, $language]);
+  }
+  else {
+    $query = $db->prepare('INSERT INTO Submission(MemberId, ChallengeId, TimePosted) VALUES (?, ?, ?)');
+    $query->execute([$memberId, $challengeId, $timePosted]);
+  }
+
+  // TODO: Get submission id.
+  // $submissionId = ?;
+
+  for ($i = 1; $i <= $fileCount; $i++) {
+    $code = $_POST['code' . $i];
+    if (isset($_POST['filename' . $i])) {
+      $filename = $_POST['filename' . $i];
+      $query = $db->prepare('INSERT INTO File(SubmissionId, Filename, Code) VALUES (?, ?, ?)');
+      $query->execute([0, $filename, $code]);
+    }
+    else {
+      $query = $db->prepare('INSERT INTO File(SubmissionId, Code) VALUES (?, ?)');
+      $query->execute([0, $code]);
+    }
+  }
 }
 ?>
 
@@ -41,6 +83,8 @@ if (isset($_POST['submit'])) {
     <?php
       $db = Database::getConnection();
 
+      // TODO:
+      // Group files by submission and by user as seen on mockup page.
       $query = $db->prepare('SELECT * FROM File');
       $query->execute();
 

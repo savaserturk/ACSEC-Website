@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  var codeCounter = 1;
+  var codeCounter = 2;
   $("#add-another-file").click(function() {
     var newFileArea = "<div>";
     newFileArea += "<input type=\"text\" name=\"filename" + codeCounter + "\" placeholder=\"filename\">";
