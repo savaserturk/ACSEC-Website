@@ -1,6 +1,8 @@
 <?php
 require 'database.php';
 
+$challengeId = 1;
+
 if (isset($_POST['submit'])) {
   $fileCount = 0;
   $fileFound = true;
@@ -17,7 +19,6 @@ if (isset($_POST['submit'])) {
   // This is a placeholder value, until the user accounts system is implemented.
   $memberId = 0;
 
-  $challengeId = 1;
   date_default_timezone_set('America/Toronto');
   $timePosted = date("Y-m-d H:i:s");
   $language = $_POST['language'];
@@ -33,19 +34,25 @@ if (isset($_POST['submit'])) {
     $query->execute([$memberId, $challengeId, $timePosted]);
   }
 
-  // TODO: Get submission id.
-  // $submissionId = ?;
+  $submissionId = 0;
+  $query = $db->prepare('SELECT SubmissionId FROM Submission WHERE TimePosted = ?');
+  $query->execute([$timePosted]);
+  if ($query->rowCount() > 0) {
+    foreach ($query as $row) {
+      $submissionId = $row['SubmissionId'];
+    }
+  }
 
   for ($i = 1; $i <= $fileCount; $i++) {
     $code = $_POST['code' . $i];
     if (isset($_POST['filename' . $i])) {
       $filename = $_POST['filename' . $i];
       $query = $db->prepare('INSERT INTO File(SubmissionId, Filename, Code) VALUES (?, ?, ?)');
-      $query->execute([0, $filename, $code]);
+      $query->execute([$submissionId, $filename, $code]);
     }
     else {
       $query = $db->prepare('INSERT INTO File(SubmissionId, Code) VALUES (?, ?)');
-      $query->execute([0, $code]);
+      $query->execute([$submissionId, $code]);
     }
   }
 }
@@ -55,9 +62,11 @@ if (isset($_POST['submit'])) {
   <head>
     <title>1 - Gates</title>
     <link rel="stylesheet" type="text/css" href="../style.css">
+    <link rel="stylesheet" type="text/css" href="../collapsible.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
     <script src="submission_extender.js"></script>
+    <script src="collapsible.js"></script>
   </head>
   <body>
     <h1>Challenge 1: Gates</h1>
@@ -81,20 +90,54 @@ if (isset($_POST['submit'])) {
       <p>XOR: 0</p>
     </div>
     <?php
+      echo '<div id="submissions">';
+
       $db = Database::getConnection();
 
-      // TODO:
-      // Group files by submission and by user as seen on mockup page.
-      $query = $db->prepare('SELECT * FROM File');
-      $query->execute();
+      // Get submissions for this challenge.
+      $submissionQuery = $db->prepare('SELECT * FROM Submission WHERE ChallengeId = ? ORDER BY SubmissionId');
+      $submissionQuery->execute([$challengeId]);
+      foreach($submissionQuery as $submissionRow) {
+        $submissionId = $submissionRow['SubmissionId'];
+        // TEMP:
+        // MemberId should be used to gather the member info once the log-in system is added.
+        $firstName = "John";
+        $lastName = "Smith";
 
-      if ($query->rowCount() > 0) {
-        foreach ($query as $row) {
-          echo '<div class="content">';
-          echo '  <pre class="prettyprint linenums lang-java">' . $row['Code'] . '</pre>';
-          echo '</div>';
+        $language = $submissionRow['Language'];
+        if ($language == 'cpp')
+          $language = 'C++';
+        else if ($language == 'c')
+          $language = 'C';
+        else if ($language == 'java')
+          $language = 'Java';
+        else if ($language == 'csharp')
+          $language = 'C#';
+        else if ($language == 'python')
+          $language = 'Python';
+        else if ($language == 'javascript')
+          $language = 'JavaScript';
+        else
+          $language = 'not set';
+
+        echo '<button class="collapsible">';
+        echo '  <span class="language">' . $language . '</span>' . $firstName . ' ' . $lastName . '<i class="date">submitted ' . 'tempDateTime' . '</i>';
+        echo '</button>';
+        echo '<div class="content">';
+        // Group files together by SubmissionId.
+        $fileQuery = $db->prepare('SELECT * FROM File WHERE SubmissionId = ? ORDER BY FileId');
+        $fileQuery->execute([$submissionId]);
+        foreach ($fileQuery as $fileRow) {
+          if ($fileRow['Filename'] != NULL) {
+            echo '<h3 class="filename">' . $fileRow['Filename'] . '</h3>';
+          }
+          // TODO: Set language based on language for submission.
+          echo '  <pre class="prettyprint linenums lang-java">' . $fileRow['Code'] . '</pre>';
         }
+        echo '</div>';
       }
+
+      echo '</div>';
 
       echo '<form action="' . $_SERVER['PHP_SELF'] . '" method="post">';
       echo '  <div id="code-submission-panel">';
@@ -105,7 +148,7 @@ if (isset($_POST['submit'])) {
       echo '      <option value="csharp">c#</option>';
       echo '      <option value="cpp">c++</option>';
       echo '      <option value="python">python</option>';
-      echo '      <option value="python">javascript</option>';
+      echo '      <option value="javascript">javascript</option>';
       echo '    </select>';
       echo '    <div id="file-area">';
       echo '      <div>';

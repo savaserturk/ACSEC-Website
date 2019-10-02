@@ -5,6 +5,10 @@
   margin: 0 0 0 2%;
 }
 
+#submissions {
+  margin: 10px 0px;
+}
+
 #code-submission-panel > * {
   display: block;
 }
@@ -16,6 +20,11 @@
 #file-area > div > * {
   display: block;
   margin: 5px;
+}
+
+.filename {
+  font-style: italic;
+  font-weight: normal;
 }
 
 li.L0, li.L1, li.L2, li.L3,
