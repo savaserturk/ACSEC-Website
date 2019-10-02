@@ -30,7 +30,11 @@
 - Difficulty (easy/medium/hard).
 - Description.
 - Example input and output.
-- Submission box will be present if logged in, along with a dropdown menu to select language being used.
+- Submission box will be present if logged in.
+    - Optional programming language selection dropdown (used for syntax highlighting).
+    - Text input field for filename for code in adjacent text-input.
+    - Text input area for code to be pasted.
+    - Button to add an additional filename and code input. (Can be pressed repeatedly to accommodate multiple file submissions.)
 - Submissions are listed in chronological order, appearing as collapsible panels.
 - Submissions show language used, member name, and date of submission.
 - Clicking a submission in the list will reveal the submitted code.
