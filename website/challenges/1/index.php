@@ -120,8 +120,11 @@ if (isset($_POST['submit'])) {
         else
           $language = 'not set';
 
+        // TODO: Format date.
+        $submissionTime = date("M j, Y \a\\t g:i a", strtotime($submissionRow['TimePosted']));
+
         echo '<button class="collapsible">';
-        echo '  <span class="language">' . $language . '</span>' . $firstName . ' ' . $lastName . '<i class="date">submitted ' . 'tempDateTime' . '</i>';
+        echo '  <span class="language">' . $language . '</span>' . $firstName . ' ' . $lastName . '<i class="date">submitted ' . $submissionTime . '</i>';
         echo '</button>';
         echo '<div class="content">';
         // Group files together by SubmissionId.
