@@ -120,7 +120,6 @@ if (isset($_POST['submit'])) {
         else
           $language = 'not set';
 
-        // TODO: Format date.
         $submissionTime = date("M j, Y \a\\t g:i a", strtotime($submissionRow['TimePosted']));
 
         echo '<button class="collapsible">';
