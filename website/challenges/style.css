@@ -13,6 +13,10 @@
   display: block;
 }
 
+#code-submission-panel > span, #code-submission-panel > select {
+  display: inline-block;
+}
+
 #file-area > div {
   margin: 10px;
 }
