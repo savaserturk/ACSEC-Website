@@ -25,6 +25,18 @@ if (isset($_POST['submit'])) {
 
   $db = Database::getConnection();
 
+  // Delete member's previous submission and files for this challenge.
+  $query = $db->prepare('SELECT SubmissionId FROM Submission WHERE ChallengeId = ? AND MemberId = ?');
+  $query->execute([$challengeId, $memberId]);
+  foreach ($query as $row) {
+    $oldSubmissionId = $row['SubmissionId'];
+    $query = $db->prepare('DELETE FROM Submission WHERE SubmissionId = ?');
+    $query->execute([$oldSubmissionId]);
+
+    $query = $db->prepare('DELETE FROM File WHERE SubmissionId = ?');
+    $query->execute([$oldSubmissionId]);
+  }
+
   $query = $db->prepare('INSERT INTO Submission(MemberId, ChallengeId, TimePosted, Language) VALUES (?, ?, ?, ?)');
   $query->execute([$memberId, $challengeId, $timePosted, $language]);
 
