@@ -44,7 +44,7 @@ if (isset($_POST['submit'])) {
   }
 
   for ($i = 1; $i <= $fileCount; $i++) {
-    $code = $_POST['code' . $i];
+    $code = htmlspecialchars($_POST['code' . $i]);
     if (isset($_POST['filename' . $i])) {
       $filename = $_POST['filename' . $i];
       $query = $db->prepare('INSERT INTO File(SubmissionId, Filename, Code) VALUES (?, ?, ?)');
@@ -133,8 +133,7 @@ if (isset($_POST['submit'])) {
           if ($fileRow['Filename'] != NULL) {
             echo '<h3 class="filename">' . $fileRow['Filename'] . '</h3>';
           }
-          // TODO: Set language based on language for submission.
-          echo '  <pre class="prettyprint linenums lang-java">' . $fileRow['Code'] . '</pre>';
+          echo '  <pre class="prettyprint linenums">' . $fileRow['Code'] . '</pre>';
         }
         echo '</div>';
       }
