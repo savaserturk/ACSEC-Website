@@ -25,14 +25,8 @@ if (isset($_POST['submit'])) {
 
   $db = Database::getConnection();
 
-  if ($language != 'none') {
-    $query = $db->prepare('INSERT INTO Submission(MemberId, ChallengeId, TimePosted, Language) VALUES (?, ?, ?, ?)');
-    $query->execute([$memberId, $challengeId, $timePosted, $language]);
-  }
-  else {
-    $query = $db->prepare('INSERT INTO Submission(MemberId, ChallengeId, TimePosted) VALUES (?, ?, ?)');
-    $query->execute([$memberId, $challengeId, $timePosted]);
-  }
+  $query = $db->prepare('INSERT INTO Submission(MemberId, ChallengeId, TimePosted, Language) VALUES (?, ?, ?, ?)');
+  $query->execute([$memberId, $challengeId, $timePosted, $language]);
 
   $submissionId = 0;
   $query = $db->prepare('SELECT SubmissionId FROM Submission WHERE TimePosted = ?');
@@ -43,17 +37,28 @@ if (isset($_POST['submit'])) {
     }
   }
 
+  $atLeastOneValidFile = false;
   for ($i = 1; $i <= $fileCount; $i++) {
     $code = htmlspecialchars($_POST['code' . $i]);
-    if (isset($_POST['filename' . $i])) {
-      $filename = $_POST['filename' . $i];
-      $query = $db->prepare('INSERT INTO File(SubmissionId, Filename, Code) VALUES (?, ?, ?)');
-      $query->execute([$submissionId, $filename, $code]);
+    $code = trim($code);
+    if (!empty($code)) {
+      $atLeastOneValidFile = true;
+      if (isset($_POST['filename' . $i])) {
+        $filename = $_POST['filename' . $i];
+        $query = $db->prepare('INSERT INTO File(SubmissionId, Filename, Code) VALUES (?, ?, ?)');
+        $query->execute([$submissionId, $filename, $code]);
+      }
+      else {
+        $query = $db->prepare('INSERT INTO File(SubmissionId, Code) VALUES (?, ?)');
+        $query->execute([$submissionId, $code]);
+      }
     }
-    else {
-      $query = $db->prepare('INSERT INTO File(SubmissionId, Code) VALUES (?, ?)');
-      $query->execute([$submissionId, $code]);
-    }
+  }
+
+  // If no files were added the submission is invalid and must be removed.
+  if (!$atLeastOneValidFile) {
+    $query = $db->prepare('DELETE FROM Submission WHERE SubmissionId = ?');
+    $query->execute([$submissionId]);
   }
 }
 ?>
