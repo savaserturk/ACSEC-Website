@@ -26,6 +26,11 @@
   margin: 5px;
 }
 
+#file-area textarea {
+  width: 100%;
+  height: 20%;
+}
+
 .filename {
   font-style: italic;
   font-weight: normal;
