@@ -1,5 +1,5 @@
 <?php
-require 'database.php';
+require '../common/database.php';
 
 $challengeId = 1;
 
@@ -78,12 +78,12 @@ if (isset($_POST['submit'])) {
 <html>
   <head>
     <title>1 - Gates</title>
-    <link rel="stylesheet" type="text/css" href="../style.css">
-    <link rel="stylesheet" type="text/css" href="../collapsible.css">
+    <link rel="stylesheet" type="text/css" href="../common/style.css">
+    <link rel="stylesheet" type="text/css" href="../common/collapsible.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
-    <script src="submission_extender.js"></script>
-    <script src="collapsible.js"></script>
+    <script src="../common/submission_extender.js"></script>
+    <script src="../common/collapsible.js"></script>
   </head>
   <body>
     <h1>Challenge 1: Gates</h1>
