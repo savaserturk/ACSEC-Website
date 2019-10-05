@@ -117,8 +117,10 @@ if (isset($_POST['submit'])) {
           $language = 'Python';
         else if ($language == 'javascript')
           $language = 'JavaScript';
+        else if ($language == 'other')
+          $language = 'Other';
         else
-          $language = 'not set';
+          $language = 'ERROR';
 
         $submissionTime = date("M j, Y \a\\t g:i a", strtotime($submissionRow['TimePosted']));
 
@@ -142,14 +144,15 @@ if (isset($_POST['submit'])) {
 
       echo '<form action="' . $_SERVER['PHP_SELF'] . '" method="post">';
       echo '  <div id="code-submission-panel">';
+      echo '    <span class="label">Language: </span>';
       echo '    <select name="language">';
-      echo '      <option value="none">select language</option>';
-      echo '      <option value="java">java</option>';
-      echo '      <option value="c">c</option>';
-      echo '      <option value="csharp">c#</option>';
-      echo '      <option value="cpp">c++</option>';
-      echo '      <option value="python">python</option>';
-      echo '      <option value="javascript">javascript</option>';
+      echo '      <option value="java">Java</option>';
+      echo '      <option value="c">C</option>';
+      echo '      <option value="csharp">C#</option>';
+      echo '      <option value="cpp">C++</option>';
+      echo '      <option value="python">Python</option>';
+      echo '      <option value="javascript">JavaScript</option>';
+      echo '      <option value="other">Other</option>';
       echo '    </select>';
       echo '    <div id="file-area">';
       echo '      <div>';
