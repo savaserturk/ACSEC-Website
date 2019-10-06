@@ -1,5 +1,5 @@
 <?php
-require '../common/database.php';
+require '../../global/database.php';
 
 $challengeId = 1;
 

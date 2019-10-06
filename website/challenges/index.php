@@ -1,5 +1,5 @@
 <?php
-require 'common/database.php';
+require '../global/database.php';
 
 // TEMP:
 // This is a placeholder value, until the user accounts system is implemented.
