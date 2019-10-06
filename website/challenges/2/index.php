@@ -1,7 +1,7 @@
 <?php
 require '../../global/database.php';
 
-$challengeId = 1;
+$challengeId = 2;
 
 if (isset($_POST['submit'])) {
   $fileCount = 0;
@@ -77,7 +77,7 @@ if (isset($_POST['submit'])) {
 
 <html>
   <head>
-    <title>1 - Gates</title>
+    <title>2 - Flip Streak</title>
     <link rel="stylesheet" type="text/css" href="../common/style.css">
     <link rel="stylesheet" type="text/css" href="../common/collapsible.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -86,25 +86,17 @@ if (isset($_POST['submit'])) {
     <script src="../common/collapsible.js"></script>
   </head>
   <body>
-    <h1>Challenge 1: Gates</h1>
-    <p>Posted on Apr 29 2019</p>
+    <h1>Challenge 2: Flip Streak</h1>
+    <p>Posted on May 6 2019</p>
     <p>Difficulty: Easy</p>
     <p>
-      Given 2 inputs (each a 0 or a 1), show the outputs of each of the following logic gates: AND, OR, and XOR. This is a good opportunity to look up the bitwise operators if you aren't familiar with them.
+      Write a method that flips a coin <i>n</i> times and returns the length of the longest streak of heads or tails.
     </p>
-    <h3>Example 1:</h3>
+    <h3>Example:</h3>
     <div class="example-code">
-      <p>Enter two inputs: 0 1</p>
-      <p>AND: 0</p>
-      <p>OR:  1</p>
-      <p>XOR: 1</p>
-    </div>
-    <h3>Example 2:</h3>
-    <div class="example-code">
-      <p>Enter two inputs: 1 1</p>
-      <p>AND: 1</p>
-      <p>OR:  1</p>
-      <p>XOR: 0</p>
+      <p>Input: 10</p>
+      <p>Which will flip the coin 10 times: H H T H T T T T T H</p>
+      <p>Output: 5</p>
     </div>
     <?php
       echo '<div id="submissions">';
