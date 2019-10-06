@@ -1,5 +1,5 @@
 <?php
-   include('database.php');   #Do we need this?
+   #include('database.php');   #Do we need this?
    $mysql_conn = require('database.php');
    session_start();
    
