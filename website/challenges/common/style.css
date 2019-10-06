@@ -1,0 +1,46 @@
+.example-code {
+  font-family: monospace;
+}
+.example-code > p {
+  margin: 0 0 0 2%;
+}
+
+#submissions {
+  margin: 10px 0px;
+}
+
+#code-submission-panel > * {
+  display: block;
+}
+
+#code-submission-panel > span, #code-submission-panel > select {
+  display: inline-block;
+}
+
+#file-area > div {
+  margin: 10px;
+}
+
+#file-area > div > * {
+  display: block;
+  margin: 5px;
+}
+
+#file-area textarea {
+  width: 100%;
+  height: 20%;
+}
+
+.filename {
+  font-style: italic;
+  font-weight: normal;
+}
+
+li.L0, li.L1, li.L2, li.L3,
+li.L5, li.L6, li.L7, li.L8 {
+  list-style-type: decimal !important;
+}
+
+.prettyprint {
+  overflow-x: scroll;
+}
