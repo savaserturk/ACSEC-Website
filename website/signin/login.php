@@ -19,7 +19,7 @@
       $count = $result->rowCount();
       
       // If result matched $myusername and $mypassword, table row must be 1 row		
-      if($count == 1 and password_verify($password, $password_h) {
+      if($count == 1 && password_verify($password, $password_h) {
          session_register("username");
          $_SESSION['username'] = $username;
          
