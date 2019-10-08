@@ -69,6 +69,7 @@
 - Account key field. A single-use key will be provided to members by club administration. This will prevent non-members from creating accounts.
 
 # Log-in Page
+- Member Id
 - Email address field.
 - Password field.
 - First name field.
