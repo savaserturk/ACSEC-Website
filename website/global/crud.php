@@ -14,16 +14,16 @@
 		if ($pass_ok) {
 			$insert=$db->prepare("INSERT INTO member SET
 				FirstName=:firstName,
-				LastName=:fastName,
+				LastName=:lastName,
 				Email=:email,
 				Password=:password
 				");
 	
 	$check=$insert->execute(array(
-		'FirstName'=>$firstName,
-		'LastName'=>$lastName,
-		'Email'=>$email,
-		'Password'=>$password
+		'firstName'=>$firstName,
+		'lastName'=>$lastName,
+		'email'=>$email,
+		'password'=>$password
 		));
 	
 			if ($check) {
