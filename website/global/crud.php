@@ -5,23 +5,25 @@
    $db = Database::getConnection();
 
    if(isset($_POST['register'])){
-	$FirstName=$_POST['FirstName'];
-	$LastName=$_POST['LastName'];
-	$Email=$_POST['Email'];
-	$Password=$_POST['Password'];
-		if (strlen($Password)>=6 && strlen($Password)<=60) {
+	$firstName = $_POST['FirstName'];
+	$lastName = $_POST['LastName'];
+	$email = $_POST['Email'];
+	$password = $_POST['Password'];
+	if (strlen($Password)>=6 && strlen($Password)<=60) {$pass_ok = True;}
+	$password = password_hash($password, PASSWORD_DEFAULT);
+		if ($pass_ok) {
 			$insert=$db->prepare("INSERT INTO member SET
-				FirstName=:FirstName,
-				LastName=:LastName,
-				Email=:Email,
-				Password=:Password
+				FirstName=:firstName,
+				LastName=:fastName,
+				Email=:email,
+				Password=:password
 				");
 	
 	$check=$insert->execute(array(
-		'FirstName'=>$_POST['FirstName'],
-		'LastName'=>$_POST['LastName'],
-		'Email'=>$_POST['Email'],
-		'Password'=>$_POST['Password']
+		'FirstName'=>$firstName,
+		'LastName'=>$lastName,
+		'Email'=>$email,
+		'Password'=>$password
 		));
 	
 			if ($check) {
