@@ -23,7 +23,7 @@ $memberId = 0;
       $query->execute();
       foreach ($query as $row) {
         date_default_timezone_set('America/Toronto');
-        $today = date("Y-m-d H:i:s");
+        $today = date("Y-m-d");
 
         // Don't show challenges that have been posted ahead of time.
         if ($row['DatePosted'] <= $today) {
