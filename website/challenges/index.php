@@ -51,7 +51,7 @@ $memberId = 0;
           $hasSubmitted = $submittedQuery->rowCount() > 0;
 
           echo '<li>';
-          echo '  <a href="' . $challengeId . '/">';
+          echo '  <a href="../challenge/?id=' . $challengeId . '">';
 
           if ($hasSubmitted)
             echo '  <div class="challenge-item submitted">';
