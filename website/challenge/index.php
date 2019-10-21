@@ -14,78 +14,84 @@
   $query->execute([$challengeId]);
 
   if ($query->rowCount() > 0) {
+    date_default_timezone_set('America/Toronto');
+    $today = date("Y-m-d");
+
+    // Don't show challenges that have been posted ahead of time.
     $challengeRow = $query->fetch();
-    $challengeId = $challengeRow['ChallengeId'];
-    $challengeTitle = $challengeRow['Title'];
     $challengeDate = $challengeRow['DatePosted'];
-    $challengeDifficulty = $challengeRow['Difficulty'];
-    $challengeDescription = $challengeRow['Description'];
-    $challengeExample = $challengeRow['Example'];
+    if ($challengeDate <= $today) {
+      $challengeId = $challengeRow['ChallengeId'];
+      $challengeTitle = $challengeRow['Title'];
+      $challengeDate = $challengeRow['DatePosted'];
+      $challengeDifficulty = $challengeRow['Difficulty'];
+      $challengeDescription = $challengeRow['Description'];
+      $challengeExample = $challengeRow['Example'];
 
-    if (isset($_POST['submit'])) {
-      $fileCount = 0;
-      $fileFound = true;
-      while ($fileFound) {
-        if (isset($_POST['code' . ($fileCount + 1)])) {
-          $fileCount++;
-        }
-        else {
-          $fileFound = false;
-        }
-      }
-
-      date_default_timezone_set('America/Toronto');
-      $timePosted = date("Y-m-d H:i:s");
-      $language = $_POST['language'];
-
-      // Delete member's previous submission and files for this challenge.
-      $query = $db->prepare('SELECT SubmissionId FROM Submission WHERE ChallengeId = ? AND MemberId = ?');
-      $query->execute([$challengeId, $memberId]);
-      foreach ($query as $row) {
-        $oldSubmissionId = $row['SubmissionId'];
-        $query = $db->prepare('DELETE FROM Submission WHERE SubmissionId = ?');
-        $query->execute([$oldSubmissionId]);
-
-        $query = $db->prepare('DELETE FROM File WHERE SubmissionId = ?');
-        $query->execute([$oldSubmissionId]);
-      }
-
-      $query = $db->prepare('INSERT INTO Submission(MemberId, ChallengeId, TimePosted, Language) VALUES (?, ?, ?, ?)');
-      $query->execute([$memberId, $challengeId, $timePosted, $language]);
-
-      $submissionId = 0;
-      $query = $db->prepare('SELECT SubmissionId FROM Submission WHERE TimePosted = ?');
-      $query->execute([$timePosted]);
-      if ($query->rowCount() > 0) {
-        foreach ($query as $row) {
-          $submissionId = $row['SubmissionId'];
-        }
-      }
-
-      $atLeastOneValidFile = false;
-      for ($i = 1; $i <= $fileCount; $i++) {
-        $code = htmlspecialchars($_POST['code' . $i]);
-        $code = trim($code);
-        if (!empty($code)) {
-          $atLeastOneValidFile = true;
-          if (isset($_POST['filename' . $i])) {
-            $filename = $_POST['filename' . $i];
-            $query = $db->prepare('INSERT INTO File(SubmissionId, Filename, Code) VALUES (?, ?, ?)');
-            $query->execute([$submissionId, $filename, $code]);
+      if (isset($_POST['submit'])) {
+        $fileCount = 0;
+        $fileFound = true;
+        while ($fileFound) {
+          if (isset($_POST['code' . ($fileCount + 1)])) {
+            $fileCount++;
           }
           else {
-            $query = $db->prepare('INSERT INTO File(SubmissionId, Code) VALUES (?, ?)');
-            $query->execute([$submissionId, $code]);
+            $fileFound = false;
           }
         }
-      }
 
-      // If no files were added the submission is invalid and must be removed.
-      if (!$atLeastOneValidFile) {
-        $query = $db->prepare('DELETE FROM Submission WHERE SubmissionId = ?');
-        $query->execute([$submissionId]);
+        date_default_timezone_set('America/Toronto');
+        $timePosted = date("Y-m-d H:i:s");
+        $language = $_POST['language'];
+
+        // Delete member's previous submission and files for this challenge.
+        $query = $db->prepare('SELECT SubmissionId FROM Submission WHERE ChallengeId = ? AND MemberId = ?');
+        $query->execute([$challengeId, $memberId]);
+        foreach ($query as $row) {
+          $oldSubmissionId = $row['SubmissionId'];
+          $query = $db->prepare('DELETE FROM Submission WHERE SubmissionId = ?');
+          $query->execute([$oldSubmissionId]);
+
+          $query = $db->prepare('DELETE FROM File WHERE SubmissionId = ?');
+          $query->execute([$oldSubmissionId]);
+        }
+
+        $query = $db->prepare('INSERT INTO Submission(MemberId, ChallengeId, TimePosted, Language) VALUES (?, ?, ?, ?)');
+        $query->execute([$memberId, $challengeId, $timePosted, $language]);
+
+        $submissionId = 0;
+        $query = $db->prepare('SELECT SubmissionId FROM Submission WHERE TimePosted = ?');
+        $query->execute([$timePosted]);
+        if ($query->rowCount() > 0) {
+          foreach ($query as $row) {
+            $submissionId = $row['SubmissionId'];
+          }
+        }
+
+        $atLeastOneValidFile = false;
+        for ($i = 1; $i <= $fileCount; $i++) {
+          $code = htmlspecialchars($_POST['code' . $i]);
+          $code = trim($code);
+          if (!empty($code)) {
+            $atLeastOneValidFile = true;
+            if (isset($_POST['filename' . $i])) {
+              $filename = $_POST['filename' . $i];
+              $query = $db->prepare('INSERT INTO File(SubmissionId, Filename, Code) VALUES (?, ?, ?)');
+              $query->execute([$submissionId, $filename, $code]);
+            }
+            else {
+              $query = $db->prepare('INSERT INTO File(SubmissionId, Code) VALUES (?, ?)');
+              $query->execute([$submissionId, $code]);
+            }
+          }
+        }
+
+        // If no files were added the submission is invalid and must be removed.
+        if (!$atLeastOneValidFile) {
+          $query = $db->prepare('DELETE FROM Submission WHERE SubmissionId = ?');
+          $query->execute([$submissionId]);
+        }
       }
-    }
 ?>
 
 <html>
@@ -201,6 +207,10 @@
 </html>
 
 <?php
+    }
+    else {
+      echo 'While we appreciate your enthusiasm, this challenge will not be available until <b>' . date("M j, Y", strtotime($challengeDate)) . '</b>.';
+    }
   }
   else {
     echo "Challenge not found!";
