@@ -36,5 +36,3 @@
 	}
 
 ?>
-
-// TODO: Add registration form HTML --->
