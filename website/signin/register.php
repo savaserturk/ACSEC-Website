@@ -74,6 +74,10 @@
     <label for="exampleInputEmail1">Password</label>
     <input type="text" class="form-control"  name="Password" placeholder="Enter email">  
   </div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Registration key</label>
+    <input type="text" class="form-control"  name="Key" placeholder="Enter email">  
+  </div>
   
   
   <button type="submit" name="register" class="btn btn-primary">Submit</button>

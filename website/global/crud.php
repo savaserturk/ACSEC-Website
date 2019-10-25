@@ -1,3 +1,5 @@
+ #TODO: need to add the registration key logic!
+
  <?php
    require('database.php');
    session_start();
