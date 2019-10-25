@@ -1,8 +1,5 @@
-.example-code {
-  font-family: monospace;
-}
-.example-code > p {
-  margin: 0 0 0 2%;
+#example {
+  margin: 0 0 2% 2%;
 }
 
 #submissions {

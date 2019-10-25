@@ -1,30 +1,32 @@
  <?php
-   #include("database.php");
-   $mysql_conn = require('database.php');
+   require('../global/database.php');
    session_start();
-  
+
+   $db = Database::getConnection();
+
    if($_SERVER["REQUEST_METHOD"] == "POST") {
-      // username and password sent from form 
-      
-      $myusername = mysqli_real_escape_string($mysql_conn,$_POST['email']);
-      $mypassword = mysqli_real_escape_string($mysql_conn,$_POST['password']);
-      
-      $sql = "SELECT id FROM admin WHERE username = '$myusername' and passcode = '$mypassword'";   #TODO: Rewrite this query!
-      $result = mysqli_query($mysql_conn,$sql);
-      $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
-      $active = $row['active'];
-      
-      $count = mysqli_num_rows($result);
-      
+
+      // username and password sent from form
+      $username = $_POST['email'];
+      $password = $_POST['password'];
+      $query1 = $db->prepare('SELECT Password FROM Member WHERE Email = ?');
+      $password_h = $query1->execute([$username]);
+
+      $query2 = $db->prepare('SELECT MemberId FROM Member WHERE Email = ?');
+      $result = $query2->execute([$username]);
+      $row = $result->fetch();
+
+      $count = $result->rowCount();
+
       // If result matched $myusername and $mypassword, table row must be 1 row
-		
-      if($count == 1) {
-         session_register("myusername");
-         $_SESSION['login_user'] = $myusername;
-         
-         header("location: welcome.php");    #Find out WTF this is
+      if($count == 1 && password_verify($password, $password_h)) {
+         session_register("username");
+         $_SESSION['username'] = $username;
+
+         header("location: welcome.php");
       }else {
          $error = "Your Login Name or Password is invalid!";
+         echo $error;
       }
    }
 ?>
@@ -43,7 +45,7 @@
     </div>
     <div>
       <span class="label">password: </span>
-      <input type="password" name="password" value=""> 
+      <input type="password" name="password" value="">
     </div>
     <div>
       <input type="submit" name="submit" value="Submit">
