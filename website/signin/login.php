@@ -1,6 +1,5 @@
- <?php
+<?php
    require('../global/database.php');
-   session_start();
 
    $db = Database::getConnection();
 
@@ -9,21 +8,18 @@
       // username and password sent from form
       $username = $_POST['email'];
       $password = $_POST['password'];
-      $query1 = $db->prepare('SELECT Password FROM Member WHERE Email = ?');
-      $password_h = $query1->execute([$username]);
-
-      $query2 = $db->prepare('SELECT MemberId FROM Member WHERE Email = ?');
-      $result = $query2->execute([$username]);
-      $row = $result->fetch();
-
-      $count = $result->rowCount();
+      $query1 = $db->prepare('SELECT Password, MemberId FROM Member WHERE Email = ?');
+      $query1->execute([$username]);
+      $count = $query1->rowCount();
+      $row = $query1->fetch();
+      $password_h = $row['Password'];
 
       // If result matched $myusername and $mypassword, table row must be 1 row
       if($count == 1 && password_verify($password, $password_h)) {
-         session_register("username");
+        session_start();
          $_SESSION['username'] = $username;
 
-         header("location: welcome.php");
+         header("Location: index.html");
       }else {
          $error = "Your Login Name or Password is invalid!";
          echo $error;
@@ -39,16 +35,18 @@
   </head>
   <body>
     <h1>Sign In</h1>
-    <div>
-      <span class="label">email: </span>
-      <input type="text" name="email" value="">
-    </div>
-    <div>
-      <span class="label">password: </span>
-      <input type="password" name="password" value="">
-    </div>
-    <div>
-      <input type="submit" name="submit" value="Submit">
-    </div>
+    <form action="<?PHP $_SERVER['PHP_SELF']; ?>" method="post">
+      <div>
+        <span class="label">email: </span>
+        <input type="text" name="email" value="">
+      </div>
+      <div>
+        <span class="label">password: </span>
+        <input type="password" name="password" value="">
+      </div>
+      <div>
+        <input type="submit" name="submit" value="Submit">
+      </div>
+    </form>
   </body>
 </html>
