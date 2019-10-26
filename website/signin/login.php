@@ -1,5 +1,6 @@
 <?php
    require('../global/database.php');
+   session_start();
 
    $db = Database::getConnection();
 
@@ -16,7 +17,6 @@
 
       // If result matched $myusername and $mypassword, table row must be 1 row
       if($count == 1 && password_verify($password, $password_h)) {
-        session_start();
          $_SESSION['username'] = $username;
 
          header("Location: index.html");
