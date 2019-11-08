@@ -1,52 +1,65 @@
- <?php
-   #include("database.php");
-   $mysql_conn = require('database.php');
+<?php
+   require('../global/database.php');
    session_start();
-  
-   if($_SERVER["REQUEST_METHOD"] == "POST") {
-      // username and password sent from form 
-      
-      $myusername = mysqli_real_escape_string($mysql_conn,$_POST['email']);
-      $mypassword = mysqli_real_escape_string($mysql_conn,$_POST['password']);
-      
-      $sql = "SELECT id FROM admin WHERE username = '$myusername' and passcode = '$mypassword'";   #TODO: Rewrite this query!
-      $result = mysqli_query($mysql_conn,$sql);
-      $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
-      $active = $row['active'];
-      
-      $count = mysqli_num_rows($result);
-      
-      // If result matched $myusername and $mypassword, table row must be 1 row
-		
-      if($count == 1) {
-         session_register("myusername");
-         $_SESSION['login_user'] = $myusername;
-         
-         header("location: welcome.php");    #Find out WTF this is
-      }else {
-         $error = "Your Login Name or Password is invalid!";
-      }
-   }
+
+   // $db = Database::getConnection();
+
+   // if($_SERVER["REQUEST_METHOD"] == "POST") {
+
+   //    // username and password sent from form
+   //    $username = $_POST['email'];
+   //    $password = $_POST['password'];
+   //    $query1 = $db->prepare('SELECT Password, MemberId FROM Member WHERE Email = ?');
+   //    $query1->execute([$username]);
+   //    $count = $query1->rowCount();
+   //    $row = $query1->fetch();
+   //    $password_h = $row['Password'];
+
+   //    // If result matched $myusername and $mypassword, table row must be 1 row
+   //    if($count == 1 && password_verify($password, $password_h)) {
+   //       $_SESSION['username'] = $username;
+
+   //       header("Location: index.html");
+   //    }else {
+   //       $error = "Your Login Name or Password is invalid!";
+   //       echo $error;
+   //    }
+   // }
+
+
 ?>
 
 <!DOCTYPE html>
 <html>
   <head>
+
+     <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
     <title>Sign In</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <!--<link rel="stylesheet" type="text/css" href="style.css">-->
   </head>
   <body>
     <h1>Sign In</h1>
-    <div>
-      <span class="label">email: </span>
-      <input type="text" name="email" value="">
-    </div>
-    <div>
-      <span class="label">password: </span>
-      <input type="password" name="password" value=""> 
-    </div>
-    <div>
-      <input type="submit" name="submit" value="Submit">
-    </div>
+    <form action="../global/crud.php" method="post"> 
+      <div>
+        <span class="label">email: </span>
+        <input type="text" name="email" value="">
+      </div>
+      <div>
+        <span class="label">password: </span>
+        <input type="password" name="password" value="">
+      </div>
+      <div>
+        <input type="submit" name="login" value="Submit">
+      </div>
+    </form>
   </body>
 </html>
+
+
+ <!--action="?PHP $_SERVER['PHP_SELF'] -->
